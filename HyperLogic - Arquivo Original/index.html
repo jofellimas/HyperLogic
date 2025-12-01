@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HyperLogic | Agência Digital Premium</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+            tailwind.config = { 
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#050505',
+                        surface: '#0A0A0A',
+                        surfaceHighlight: '#121212',
+                        primary: '#6D28D9',
+                        primaryLight: '#8B5CF6',
+                        accent: '#00D4FF',
+                        success: '#00C853',
+                    },
+                    backgroundImage: {
+                        'gradient-glow': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND MESH GRADIENT --- */
+        .ambient-light {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 15% 50%, rgba(109, 40, 217, 0.12), transparent 40%),
+                        radial-gradient(circle at 85% 30%, rgba(0, 212, 255, 0.08), transparent 40%);
+            filter: blur(40px);
+            pointer-events: none;
+        }
+
+        /* --- COMPONENTES --- */
+        .glass-card {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px -10px rgba(109, 40, 217, 0.2);
+        }
+
+        .nav-blur {
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accordion */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        .accordion-item.open .accordion-content {
+            max-height: 200px;
+            opacity: 1;
+        }
+        
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+            color: #8B5CF6;
+        }
+
+        /* Texto Gradiente */
+        .text-gradient {
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-primary selection:text-white">
+
+    <div class="ambient-light"></div>
+    
+    <nav class="fixed w-full z-50 top-0 nav-blur">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-xl bg-surfaceHighlight border border-white/10 flex items-center justify-center group-hover:border-primary/50 transition-colors">
+                    <i class="ph-bold ph-code text-primary text-xl"></i>
+                </div>
+                <span class="font-display font-bold text-xl tracking-tight text-white">Hyper<span class="text-primaryLight">Logic</span></span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+                <a href="#servicos" class="hover:text-white transition-colors">Serviços</a>
+                <a href="#processo" class="hover:text-white transition-colors">Processo</a>
+                <a href="#portfolio" class="hover:text-white transition-colors">Portfólio</a>
+                <a href="#planos" class="hover:text-white transition-colors">Planos</a>
+                <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                    </span>
+                    <span class="text-xs font-bold text-success uppercase tracking-wide">Disponível</span>
+                </div>
+                <a href="https://wa.me/5511999999999" class="hidden md:flex bg-white text-black px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors">
+                    Falar no WhatsApp
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            
+            <div class="reveal inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 mb-8 backdrop-blur-sm">
+                <span class="text-xs font-semibold text-accent uppercase tracking-wider">Desenvolvimento Web de Elite</span>
+            </div>
+
+            <h1 class="reveal font-display font-bold text-5xl md:text-7xl lg:text-8xl leading-[1.1] mb-8 tracking-tight">
+                Criamos o <span class="text-gradient">Visual</span> <br>
+                que impulsiona negócios.
+            </h1>
+            
+            <p class="reveal text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Somos desenvolvedores focados em transformar conhecimento técnico em interfaces de alta performance. Sem burocracia, direto ao ponto.
+            </p>
+
+            <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://wa.me/5511999999999" class="w-full sm:w-auto px-8 py-4 bg-primary hover:bg-primaryLight text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2 group">
+                    <i class="ph-bold ph-whatsapp-logo text-2xl group-hover:scale-110 transition-transform"></i>
+                    Solicitar Orçamento
+                </a>
+
+                <a href="#planos" class="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/50 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                    Ver Planos
+                    <i class="ph-bold ph-list-dashes"></i>
+                </a>
+
+                <a href="#portfolio" class="w-full sm:w-auto px-8 py-4 bg-surfaceHighlight border border-white/10 hover:border-white/20 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                    Ver Projeto
+                    <i class="ph-bold ph-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/20 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+    </section>
+
+    <div class="border-y border-white/5 bg-surfaceHighlight/50 overflow-hidden py-8">
+        <div class="relative flex overflow-x-hidden group">
+            <div class="animate-marquee whitespace-nowrap flex items-center gap-16 px-8 opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500">
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-atom text-cyan-400"></i> REACT</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-file-html text-orange-500"></i> HTML5</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-paint-brush text-pink-500"></i> TAILWIND</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-code text-yellow-400"></i> JAVASCRIPT</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-device-mobile text-purple-500"></i> RESPONSIVO</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-rocket-launch text-green-500"></i> SEO</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-atom text-cyan-400"></i> REACT</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-file-html text-orange-500"></i> HTML5</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-paint-brush text-pink-500"></i> TAILWIND</span>
+                <span class="text-2xl font-display font-bold flex items-center gap-2"><i class="ph-bold ph-code text-yellow-400"></i> JAVASCRIPT</span>
+            </div>
+        </div>
+    </div>
+
+    <section id="servicos" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16 reveal">
+                <h2 class="font-display font-bold text-4xl mb-4">Soluções Visuais</h2>
+                <p class="text-gray-400 max-w-xl">Não usamos templates prontos. Desenvolvemos o frontend pensado para a necessidade real do seu negócio.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-card p-8 rounded-2xl reveal">
+                    <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary mb-6">
+                        <i class="ph-bold ph-desktop text-2xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3">Landing Pages</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Páginas de venda focadas em conversão. Design persuasivo para transformar visitantes em clientes.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-primary"></i> Carregamento Instantâneo</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-primary"></i> Pixel do Facebook/Google</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl reveal delay-100 border-primary/20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 px-3 py-1 bg-primary text-white text-xs font-bold rounded-bl-lg">Mais Popular</div>
+                    <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center text-accent mb-6">
+                        <i class="ph-bold ph-buildings text-2xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3">Sites Institucionais</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">A vitrine digital da sua empresa. Transmita credibilidade e profissionalismo 24 horas por dia.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-accent"></i> Design Exclusivo</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-accent"></i> SEO Otimizado</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl reveal delay-200">
+                    <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center text-success mb-6">
+                        <i class="ph-bold ph-lightning text-2xl"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3">Otimização de Interface</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Refazemos a estrutura visual do seu site para ele carregar mais rápido e ter melhor usabilidade.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-success"></i> Score Verde no Lighthouse</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-success"></i> Código Semântico</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="processo" class="py-24 bg-surfaceHighlight/30 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Como Trabalhamos</span>
+                <h2 class="font-display font-bold text-3xl md:text-4xl">Processo Transparente</h2>
+            </div>
+
+            <div class="relative">
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-white/5 -translate-y-1/2 z-0"></div>
+
+                <div class="grid md:grid-cols-4 gap-8 relative z-10">
+                    <div class="reveal text-center group">
+                        <div class="w-16 h-16 mx-auto bg-surface border border-white/10 rounded-full flex items-center justify-center text-xl font-bold mb-4 group-hover:border-primary group-hover:text-primary transition-colors shadow-lg">1</div>
+                        <h3 class="font-bold text-lg mb-2">Briefing</h3>
+                        <p class="text-sm text-gray-400">Entendemos sua ideia visual e objetivos.</p>
+                    </div>
+                    <div class="reveal delay-100 text-center group">
+                        <div class="w-16 h-16 mx-auto bg-surface border border-white/10 rounded-full flex items-center justify-center text-xl font-bold mb-4 group-hover:border-primary group-hover:text-primary transition-colors shadow-lg">2</div>
+                        <h3 class="font-bold text-lg mb-2">Design & UI</h3>
+                        <p class="text-sm text-gray-400">Criamos o layout moderno e alinhado com sua marca.</p>
+                    </div>
+                    <div class="reveal delay-200 text-center group">
+                        <div class="w-16 h-16 mx-auto bg-surface border border-white/10 rounded-full flex items-center justify-center text-xl font-bold mb-4 group-hover:border-primary group-hover:text-primary transition-colors shadow-lg">3</div>
+                        <h3 class="font-bold text-lg mb-2">Frontend</h3>
+                        <p class="text-sm text-gray-400">Codificação fiel ao design, responsiva e rápida.</p>
+                    </div>
+                    <div class="reveal delay-300 text-center group">
+                        <div class="w-16 h-16 mx-auto bg-surface border border-white/10 rounded-full flex items-center justify-center text-xl font-bold mb-4 group-hover:border-success group-hover:text-success transition-colors shadow-lg">4</div>
+                        <h3 class="font-bold text-lg mb-2">Entrega</h3>
+                        <p class="text-sm text-gray-400">Seu site no ar, pronto para receber visitantes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+                <div>
+                    <h2 class="font-display font-bold text-4xl mb-2">Projetos em Destaque</h2>
+                    <p class="text-gray-400">Veja o que estamos construindo.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 reveal">
+                
+                <a href="Mecânica 01/index.html" class="w-full group relative rounded-2xl overflow-hidden aspect-video bg-surfaceHighlight border border-white/5 cursor-pointer block hover:-translate-y-2 transition-transform duration-300">
+                    
+                    <div class="absolute inset-0 overflow-hidden bg-surfaceHighlight">
+                        <iframe 
+                            src="Mecânica 01/index.html" 
+                            class="w-[200%] h-[200%] border-0 transform origin-top-left scale-50 pointer-events-none"
+                            loading="lazy"
+                            title="Preview do Projeto Mecânica"
+                        ></iframe>
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors duration-500"></div>
+                    </div>
+                    
+                    <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-2 block">Institucional</span>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl font-bold text-white mb-2">Oficina Mecânica</h3>
+                            <i class="ph-bold ph-arrow-up-right text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm line-clamp-2">Site moderno com agendamento e galeria de serviços automotivos.</p>
+                    </div>
+                </a>
+
+                <a href="BurgerApp/index.html" class="w-full group relative rounded-2xl overflow-hidden aspect-video bg-surfaceHighlight border border-white/5 cursor-pointer block hover:-translate-y-2 transition-transform duration-300">
+                    
+                    <div class="absolute inset-0 overflow-hidden bg-surfaceHighlight">
+                        <iframe 
+                            src="BurgerApp/index.html" 
+                            class="w-[200%] h-[200%] border-0 transform origin-top-left scale-50 pointer-events-none"
+                            loading="lazy"
+                            title="Preview do Projeto Burger"
+                        ></iframe>
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/0 transition-colors duration-500"></div>
+                    </div>
+                    
+                    <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+                        <span class="text-primary text-xs font-bold uppercase tracking-wider mb-2 block">Landing Page</span>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-2xl font-bold text-white mb-2">Burger Delivery</h3>
+                            <i class="ph-bold ph-arrow-up-right text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm line-clamp-2">Interface moderna para delivery de lanches com cardápio digital interativo.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="planos" class="py-24 relative overflow-hidden">
+        <div class="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent font-bold tracking-widest text-xs uppercase mb-2 block">Investimento Inteligente</span>
+                <h2 class="font-display font-bold text-4xl mb-4">Planos de Desenvolvimento</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Escolha o modelo ideal para o seu projeto.</p>
+            </div>
+
+            <div class="flex flex-col gap-6 mb-20 reveal">
+                
+                <div class="glass-card p-8 md:p-10 rounded-2xl border border-white/5 hover:border-primary/50 flex flex-col md:flex-row md:items-center justify-between gap-8 group">
+                    <div class="flex-1">
+                        <span class="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-300 uppercase mb-3">Página Única</span>
+                        <h3 class="font-display font-bold text-3xl text-white mb-2">Landing Page</h3>
+                        <p class="text-gray-400 text-sm max-w-md">Foco total em conversão de vendas. Ideal para campanhas de marketing e produtos específicos.</p>
+                        
+                        <div class="flex flex-wrap gap-4 mt-6 text-sm text-gray-400">
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-primary"></i> Design Persuasivo</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-primary"></i> Botões WhatsApp</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-primary"></i> Rápido</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:items-end gap-4 min-w-[200px] border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8">
+                        <div class="text-left md:text-right flex flex-col items-start md:items-end">
+                            <span class="block text-xs text-gray-500 mb-1">Pagamento Único</span>
+                            <span class="text-3xl font-bold text-white">R$ 499,90</span>
+
+                            <div class="mt-2 p-2 rounded-lg bg-primary/10 border border-primary/20 text-right">
+                                <span class="block text-[10px] font-bold text-primary uppercase tracking-wide">Oferta Combo</span>
+                                <span class="text-xs text-gray-300 font-medium">+ R$ 99,90/mês (Manutenção)</span>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/5511999999999?text=Tenho%20interesse%20na%20Landing%20Page" class="px-6 py-3 border border-white/10 rounded-xl font-bold hover:bg-white/10 transition-colors w-full md:w-auto text-center">
+                            Contratar
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 md:p-10 rounded-2xl border border-primary/50 bg-primary/5 flex flex-col md:flex-row md:items-center justify-between gap-8 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <div class="relative z-10 flex-1">
+                        <span class="inline-block px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-xs font-bold text-primaryLight uppercase mb-3">Mais Vendido</span>
+                        <h3 class="font-display font-bold text-3xl text-white mb-2">Site Institucional</h3>
+                        <p class="text-gray-300 text-sm max-w-md">A estrutura completa para sua empresa. Multíplas páginas, autoridade digital e integração completa.</p>
+                        
+                        <div class="flex flex-wrap gap-4 mt-6 text-sm text-gray-300">
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-accent"></i> Até 5 Páginas</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-accent"></i> SEO Avançado</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-accent"></i> Integração Redes Sociais</span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 flex flex-col md:items-end gap-4 min-w-[200px] border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8">
+                        <div class="text-left md:text-right flex flex-col items-start md:items-end">
+                            <span class="block text-xs text-primaryLight mb-1">Melhor Custo-Benefício</span>
+                            <span class="text-4xl font-display font-bold text-white">R$ 599,90</span>
+
+                            <div class="mt-2 p-2 rounded-lg bg-black/40 border border-primary/30 text-right">
+                                <span class="block text-[10px] font-bold text-primaryLight uppercase tracking-wide">Leve com Manutenção</span>
+                                <span class="text-xs text-white font-medium">+ R$ 99,90/mês</span>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/5511999999999?text=Tenho%20interesse%20no%20Site%20Institucional" class="px-8 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primaryLight shadow-lg shadow-primary/20 transition-all w-full md:w-auto text-center">
+                            Contratar Agora
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 md:p-10 rounded-2xl border border-white/5 hover:border-accent/50 flex flex-col md:flex-row md:items-center justify-between gap-8 group">
+                    <div class="flex-1">
+                        <span class="inline-block px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-xs font-bold text-accent uppercase mb-3">Renovação</span>
+                        <h3 class="font-display font-bold text-3xl text-white mb-2">Redesign Visual</h3>
+                        <p class="text-gray-400 text-sm max-w-md">Seu site já existe, mas precisa de um visual moderno? Refazemos a interface do zero.</p>
+                        
+                        <div class="flex flex-wrap gap-4 mt-6 text-sm text-gray-400">
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-success"></i> Nova Identidade</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-success"></i> Otimização Speed</span>
+                            <span class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-success"></i> Mobile First</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:items-end gap-4 min-w-[200px] border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8">
+                        <div class="text-left md:text-right flex flex-col items-start md:items-end">
+                            <span class="block text-xs text-gray-500 mb-1">Pagamento Único</span>
+                            <span class="text-3xl font-bold text-white">R$ 399,90</span>
+                        </div>
+                        <a href="https://wa.me/5511999999999?text=Quero%20fazer%20um%20Redesign" class="px-6 py-3 border border-white/10 rounded-xl font-bold hover:bg-white/10 transition-colors w-full md:w-auto text-center">
+                            Contratar
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="flex items-center gap-4 mb-12 reveal">
+                <div class="h-px bg-white/10 flex-1"></div>
+                <h3 class="font-display font-bold text-xl text-gray-400">Tabela de Serviços Avulsos</h3>
+                <div class="h-px bg-white/10 flex-1"></div>
+            </div>
+            
+            <div class="text-center mb-8 reveal">
+                <p class="text-gray-400 text-sm">Valores para manutenção avulsa (clientes sem assinatura mensal).</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-t-success reveal">
+                    <div class="mb-4">
+                        <span class="text-success font-bold text-sm tracking-wider uppercase">Nível Fácil</span>
+                        <h4 class="font-display font-bold text-2xl mt-1">Ajuste Leve</h4>
+                        <p class="text-xs text-gray-500 mt-2">Para correções rápidas pontuais.</p>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-6">R$ 79,90 <span class="text-sm font-normal text-gray-500">/demanda</span></div>
+                    
+                    <ul class="space-y-3 text-sm text-gray-400 mb-8 border-t border-white/5 pt-6">
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-pencil-simple text-success mt-1"></i>
+                            Alteração de textos simples
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-image text-success mt-1"></i>
+                            Troca de imagens
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-palette text-success mt-1"></i>
+                            Mudança de cores básicas
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/5511999999999?text=Preciso%20de%20um%20Ajuste%20Leve" class="block w-full py-2 border border-white/10 rounded-lg text-center text-sm font-medium hover:bg-white/5 hover:border-success/50 transition-colors">Solicitar Ajuste</a>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-t-accent bg-surfaceHighlight/20 reveal delay-100">
+                    <div class="mb-4">
+                        <span class="text-accent font-bold text-sm tracking-wider uppercase">Nível Médio</span>
+                        <h4 class="font-display font-bold text-2xl mt-1">Intermediário</h4>
+                        <p class="text-xs text-gray-500 mt-2">Melhorias visuais e conteúdo novo.</p>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-6">R$ 149,90 <span class="text-sm font-normal text-gray-500">/demanda</span></div>
+                    
+                    <ul class="space-y-3 text-sm text-gray-400 mb-8 border-t border-white/5 pt-6">
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-plus-circle text-accent mt-1"></i>
+                            Criação de nova seção
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-rocket text-accent mt-1"></i>
+                            Otimização de velocidade
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-article text-accent mt-1"></i>
+                            Inserção de Banners/Popups
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/5511999999999?text=Preciso%20de%20um%20Ajuste%20Medio" class="block w-full py-2 bg-accent/10 border border-accent/20 rounded-lg text-center text-sm font-bold text-accent hover:bg-accent hover:text-black transition-colors">Solicitar Ajuste</a>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-t-primary reveal delay-200">
+                    <div class="mb-4">
+                        <span class="text-primary font-bold text-sm tracking-wider uppercase">Nível Difícil</span>
+                        <h4 class="font-display font-bold text-2xl mt-1">Complexo</h4>
+                        <p class="text-xs text-gray-500 mt-2">Mudanças estruturais e lógica.</p>
+                    </div>
+                    <div class="text-3xl font-bold text-white mb-6">R$ 229,90 <span class="text-sm font-normal text-gray-500">/demanda</span></div>
+                    
+                    <ul class="space-y-3 text-sm text-gray-400 mb-8 border-t border-white/5 pt-6">
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-code text-primary mt-1"></i>
+                            Novas páginas inteiras
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-sparkle text-primary mt-1"></i>
+                            Animações Avançadas
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-arrows-clockwise text-primary mt-1"></i>
+                            Refatoração de Layout (Redesign)
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/5511999999999?text=Preciso%20de%20um%20Ajuste%20Complexo" class="block w-full py-2 border border-white/10 rounded-lg text-center text-sm font-medium hover:bg-white/5 hover:border-primary/50 transition-colors">Solicitar Ajuste</a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-24 bg-surfaceHighlight/30 border-y border-white/5">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 mb-8 reveal">
+                <i class="ph-fill ph-student text-primary"></i>
+                <span class="text-xs font-bold text-primary uppercase">Excelência & Dedicação</span>
+            </div>
+            
+            <h2 class="font-display font-bold text-3xl md:text-5xl mb-8 reveal">Excelência técnica <br>direto da fonte.</h2>
+            
+            <p class="text-lg text-gray-400 leading-relaxed mb-12 reveal">
+                Não somos apenas "fazedores de sites". Somos formados pelo rigor técnico de anos de estudo e prática. Focamos na entrega visual perfeita, com código limpo e moderno. Ao contratar a HyperLogic, você fala diretamente com quem escreve o código: <strong>Joaquim Felipe</strong> e <strong>Lucas Martins</strong>.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 reveal">
+                <div class="glass-card p-6 rounded-xl flex items-center gap-4 text-left hover:bg-white/5">
+                    <img src="https://ui-avatars.com/api/?name=Joaquim+Felipe&background=6D28D9&color=fff" alt="Joaquim" class="w-16 h-16 rounded-full border-2 border-primary">
+                    <div>
+                        <h4 class="font-bold text-white text-lg">Joaquim Felipe</h4>
+                        <p class="text-sm text-gray-500">Frontend Developer</p>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl flex items-center gap-4 text-left hover:bg-white/5">
+                    <img src="https://ui-avatars.com/api/?name=Lucas+Martins&background=00D4FF&color=fff" alt="Lucas" class="w-16 h-16 rounded-full border-2 border-accent">
+                    <div>
+                        <h4 class="font-bold text-white text-lg">Lucas Martins</h4>
+                        <p class="text-sm text-gray-500">Frontend Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-24">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="font-display font-bold text-3xl text-center mb-12 reveal">Perguntas Frequentes</h2>
+
+            <div class="space-y-4">
+                <div class="accordion-item bg-surfaceHighlight rounded-xl border border-white/5 overflow-hidden reveal">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-bold text-white">Quanto tempo leva para criar um site?</span>
+                        <i class="ph-bold ph-caret-down text-gray-500 accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-black/20">
+                        <div class="p-6 pt-0 text-gray-400 text-sm leading-relaxed">
+                            Depende da complexidade. Uma Landing Page (página única) geralmente entregamos em <strong>1 a 2 dias úteis</strong> após o recebimento do conteúdo. Sites institucionais maiores podem levar de 1 a 5 dias. Nosso foco é agilidade sem perder qualidade.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-surfaceHighlight rounded-xl border border-white/5 overflow-hidden reveal delay-100">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-bold text-white">Vocês fazem o registro do domínio e hospedagem?</span>
+                        <i class="ph-bold ph-caret-down text-gray-500 accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-black/20">
+                        <div class="p-6 pt-0 text-gray-400 text-sm leading-relaxed">
+                            Nós prestamos toda a consultoria! Ajudamos você a comprar o domínio (seu nome.com.br) e contratar a melhor hospedagem no seu nome, garantindo que você tenha 100% de propriedade sobre o seu site e arquivos.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-surfaceHighlight rounded-xl border border-white/5 overflow-hidden reveal delay-200">
+                    <button class="w-full flex items-center justify-between p-6 text-left focus:outline-none" onclick="toggleAccordion(this)">
+                        <span class="font-bold text-white">O site funciona no celular?</span>
+                        <i class="ph-bold ph-caret-down text-gray-500 accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-black/20">
+                        <div class="p-6 pt-0 text-gray-400 text-sm leading-relaxed">
+                            Com certeza. Adotamos a metodologia <strong>Mobile First</strong>. Seu site será desenhado pensando primeiro na experiência em smartphones, garantindo que seus clientes tenham uma navegação perfeita em qualquer dispositivo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/10 bg-black pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="#" class="flex items-center gap-2 mb-6">
+                        <i class="ph-bold ph-code text-primary text-2xl"></i>
+                        <span class="font-display font-bold text-2xl text-white">Hyper<span class="text-primaryLight">Logic</span></span>
+                    </a>
+                    <p class="text-gray-500 text-sm max-w-sm mb-6">
+                        Levamos o desenvolvimento frontend a sério. Interfaces futuristas, código limpo e resultados reais para o seu negócio.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://instagram.com" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-primary hover:text-white transition-all">
+                            <i class="ph-bold ph-instagram-logo text-xl"></i>
+                        </a>
+                        <a href="https://wa.me/5511999999999" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-success hover:text-white transition-all">
+                            <i class="ph-bold ph-whatsapp-logo text-xl"></i>
+                        </a>
+                        <a href="mailto:contato@hyperlogic.com" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-accent hover:text-white transition-all">
+                            <i class="ph-bold ph-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-white mb-6">Serviços</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li><a href="#" class="hover:text-primary transition-colors">Landing Pages</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Sites Institucionais</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Otimização SEO</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Design UI/UX</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-white mb-6">Links Rápidos</h4>
+                    <ul class="space-y-4 text-sm text-gray-500">
+                        <li><a href="#processo" class="hover:text-primary transition-colors">Nosso Processo</a></li>
+                        <li><a href="#equipe" class="hover:text-primary transition-colors">Sobre a Equipe</a></li>
+                        <li><a href="#faq" class="hover:text-primary transition-colors">Dúvidas Frequentes</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Área do Cliente</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-600">
+                <p>&copy; 2025 HyperLogic. Todos os direitos reservados.</p>
+                <p>Designed & Coded by <span class="text-gray-400">Joaquim & Lucas</span>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lógica do Accordion
+        function toggleAccordion(button) {
+            const item = button.parentElement;
+            const isOpen = item.classList.contains('open');
+            
+            document.querySelectorAll('.accordion-item').forEach(i => {
+                i.classList.remove('open');
+            });
+
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+
+        // Observer para Animação de Scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

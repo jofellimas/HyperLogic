@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BurgerApp - O Melhor Artesanal da Cidade</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Animações */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .reveal {
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c2410c; }
+
+        /* Utilitários */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        
+        /* Ajuste para mobile */
+        .mobile-nav-height { height: 70px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased pb-24"> <!-- pb-24 para dar espaço ao footer no mobile -->
+
+    <!-- Navbar: Transparente no topo, sólida ao rolar -->
+    <header id="navbar" class="fixed top-0 w-full z-40 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="bg-orange-600 text-white p-2.5 rounded-xl shadow-lg">
+                        <i class="fas fa-hamburger text-xl"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="font-bold text-xl leading-none text-gray-900">BurgerApp</h1>
+                        <span class="text-xs text-orange-600 font-medium tracking-wider">PREMIUM DELIVERY</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-600 hover:text-orange-600 font-medium transition">Início</a>
+                    <a href="#sobre" class="text-gray-600 hover:text-orange-600 font-medium transition">Sobre</a>
+                    <a href="#cardapio" class="text-gray-600 hover:text-orange-600 font-medium transition">Cardápio</a>
+                    <a href="#depoimentos" class="text-gray-600 hover:text-orange-600 font-medium transition">Depoimentos</a>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden lg:flex flex-col items-end mr-2">
+                        <span class="text-xs text-gray-500">Delivery:</span>
+                        <span class="font-bold text-sm text-gray-900">(11) 99999-9999</span>
+                    </div>
+                    <!-- Botão Carrinho Desktop -->
+                    <button id="cart-btn-desktop" onclick="toggleCartModal()" class="relative bg-orange-100 hover:bg-orange-200 text-orange-600 p-2.5 rounded-xl transition">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span id="cart-count-desktop" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section (Principal) -->
+    <section id="home" class="relative pt-24 pb-12 lg:pt-32 lg:pb-24 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Imagem de fundo com overlay -->
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Background Burger" class="w-full h-full object-cover opacity-10">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2 text-center md:text-left reveal">
+                <span class="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 text-sm font-bold mb-4">
+                    🍔 O Verdadeiro Sabor Artesanal
+                </span>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                    A Felicidade em <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">Cada Mordida</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8 leading-relaxed max-w-lg mx-auto md:mx-0">
+                    Hamburgueres feitos com blend de carnes nobres, ingredientes frescos selecionados diariamente e aquele molho secreto que você só encontra aqui.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#cardapio" class="bg-orange-600 text-white px-8 py-4 rounded-xl font-bold shadow-xl shadow-orange-200 hover:bg-orange-700 transition text-center">
+                        Ver Cardápio Completo
+                    </a>
+                    <a href="#sobre" class="bg-white text-gray-700 border border-gray-200 px-8 py-4 rounded-xl font-bold hover:bg-gray-50 transition text-center">
+                        Conhecer a Casa
+                    </a>
+                </div>
+                
+                <div class="mt-8 flex items-center justify-center md:justify-start gap-6 text-sm text-gray-500 font-medium">
+                    <span class="flex items-center gap-2"><i class="fas fa-motorcycle text-orange-500"></i> Entrega Rápida</span>
+                    <span class="flex items-center gap-2"><i class="fas fa-star text-orange-500"></i> 4.9 no iFood</span>
+                </div>
+            </div>
+
+            <div class="md:w-1/2 relative reveal" style="animation-delay: 0.2s;">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="rounded-3xl shadow-2xl transform rotate-3 hover:rotate-0 transition duration-500 border-4 border-white" alt="Burger Destaque">
+                <!-- Badge Flutuante -->
+                <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                    <div class="bg-green-100 p-2 rounded-full text-green-600">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Entrega média</p>
+                        <p class="font-bold text-gray-900">30-45 min</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Diferenciais -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 rounded-2xl hover:bg-orange-50 transition duration-300 group">
+                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-orange-600 group-hover:text-white transition">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Grelhado no Fogo</h3>
+                    <p class="text-gray-500 text-sm">Nossa carne é preparada na grelha char broiler para aquele sabor defumado inconfundível.</p>
+                </div>
+                <div class="text-center p-6 rounded-2xl hover:bg-orange-50 transition duration-300 group">
+                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-orange-600 group-hover:text-white transition">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Ingredientes Frescos</h3>
+                    <p class="text-gray-500 text-sm">Vegetais orgânicos que chegam todo dia de manhã. Nada congelado, tudo fresco.</p>
+                </div>
+                <div class="text-center p-6 rounded-2xl hover:bg-orange-50 transition duration-300 group">
+                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-orange-600 group-hover:text-white transition">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Delivery Premium</h3>
+                    <p class="text-gray-500 text-sm">Embalagens térmicas especiais que mantém seu lanche quente e montado até sua casa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cardápio Section -->
+    <section id="cardapio" class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Nosso Cardápio</h2>
+                <div class="w-20 h-1 bg-orange-500 mx-auto rounded-full"></div>
+                <p class="text-gray-500 mt-4">Escolha seu favorito e monte seu pedido no carrinho</p>
+            </div>
+
+            <!-- Categorias (Filtros) -->
+            <div class="flex justify-center gap-2 mb-8 overflow-x-auto hide-scrollbar pb-2" id="category-filters">
+                <button onclick="filterMenu('all')" class="filter-btn active bg-orange-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md whitespace-nowrap hover:bg-orange-700 transition" data-category="all">Todos</button>
+                <button onclick="filterMenu('burger')" class="filter-btn bg-white text-gray-600 px-6 py-2 rounded-full text-sm font-semibold shadow-sm border border-gray-200 whitespace-nowrap hover:bg-gray-100 transition" data-category="burger">Burgers</button>
+                <button onclick="filterMenu('combo')" class="filter-btn bg-white text-gray-600 px-6 py-2 rounded-full text-sm font-semibold shadow-sm border border-gray-200 whitespace-nowrap hover:bg-gray-100 transition" data-category="combo">Combos</button>
+                <button onclick="filterMenu('acompanhamento')" class="filter-btn bg-white text-gray-600 px-6 py-2 rounded-full text-sm font-semibold shadow-sm border border-gray-200 whitespace-nowrap hover:bg-gray-100 transition" data-category="acompanhamento">Acompanhamentos</button>
+                <button onclick="filterMenu('bebida')" class="filter-btn bg-white text-gray-600 px-6 py-2 rounded-full text-sm font-semibold shadow-sm border border-gray-200 whitespace-nowrap hover:bg-gray-100 transition" data-category="bebida">Bebidas</button>
+            </div>
+
+            <!-- Grid do Menu -->
+            <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Skeleton Loading -->
+                <div class="animate-pulse bg-white rounded-2xl p-4 shadow-sm h-40"></div>
+                <div class="animate-pulse bg-white rounded-2xl p-4 shadow-sm h-40"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Nós -->
+    <section id="sobre" class="py-16 bg-white overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 order-2 md:order-1">
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-2xl shadow-lg mt-8" alt="Restaurante Interior">
+                        <img src="https://images.unsplash.com/photo-1586816001966-79b736744398?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="rounded-2xl shadow-lg mb-8" alt="Chef cozinhando">
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <span class="text-orange-600 font-bold tracking-wider text-sm">NOSSA HISTÓRIA</span>
+                    <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-6">Mais que um Burger, uma Experiência.</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Começamos em 2015 com uma pequena chapa e um grande sonho: provar que fast-food pode ter qualidade de restaurante 5 estrelas. 
+                    </p>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        Hoje, somos referência na cidade, conhecidos não apenas pelo sabor inigualável do nosso blend secreto, mas pelo carinho que colocamos em cada detalhe, desde a escolha do tomate até a entrega na sua porta.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="text-center">
+                            <h4 class="text-3xl font-bold text-gray-900">8+</h4>
+                            <span class="text-xs text-gray-500">Anos de História</span>
+                        </div>
+                        <div class="h-10 w-px bg-gray-200"></div>
+                        <div class="text-center">
+                            <h4 class="text-3xl font-bold text-gray-900">50k+</h4>
+                            <span class="text-xs text-gray-500">Pedidos Entregues</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section id="depoimentos" class="py-16 bg-orange-600 text-white">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-12">Quem pede, vira fã</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                    <div class="text-yellow-300 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-6 italic">"O melhor smash burger que já comi! Chegou super quente e a batata estava crocante. Virei cliente fiel."</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                             <img src="https://i.pravatar.cc/150?img=68" alt="Cliente">
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-sm">Pedro Silva</p>
+                            <p class="text-xs text-orange-200">Cliente via iFood</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 transform md:-translate-y-4 shadow-xl">
+                    <div class="text-yellow-300 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-6 italic">"Atendimento impecável pelo WhatsApp e a entrega foi mais rápida do que o previsto. O molho da casa é sensacional!"</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=44" alt="Cliente">
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-sm">Mariana Costa</p>
+                            <p class="text-xs text-orange-200">Cliente Recorrente</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                    <div class="text-yellow-300 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="mb-6 italic">"Ambiente incrível e lanches gigantes. O custo benefício é excelente pela qualidade dos ingredientes."</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Cliente">
+                        </div>
+                        <div class="text-left">
+                            <p class="font-bold text-sm">Carlos Oliveira</p>
+                            <p class="text-xs text-orange-200">Local Guide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-2 mb-4 text-white">
+                    <i class="fas fa-hamburger text-2xl text-orange-500"></i>
+                    <span class="font-bold text-xl">BurgerApp</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-4">
+                    Levando felicidade em forma de hambúrguer para sua casa desde 2015.
+                </p>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4">Links Rápidos</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#home" class="hover:text-orange-500 transition">Início</a></li>
+                    <li><a href="#cardapio" class="hover:text-orange-500 transition">Cardápio</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Contato</h4>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-map-marker-alt mt-1 text-orange-500"></i>
+                        <span>Av. Paulista, 1000<br>São Paulo - SP</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="fas fa-phone-alt text-orange-500"></i>
+                        <span>(11) 99999-9999</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Horários</h4>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex justify-between">
+                        <span>Seg - Qui</span>
+                        <span class="text-white">18h - 23h</span>
+                    </li>
+                    <li class="flex justify-between">
+                        <span>Sex - Sáb</span>
+                        <span class="text-white">18h - 01h</span>
+                    </li>
+                    <li class="flex justify-between">
+                        <span>Domingo</span>
+                        <span class="text-white">17h - 23h</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-gray-800 text-center text-xs">
+            <p>&copy; 2024 BurgerApp. Todos os direitos reservados. Design by AI.</p>
+        </div>
+    </footer>
+
+    <!-- CART MODAL (ESCONDIDO POR PADRÃO) -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+        <!-- Overlay escuro -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartModal()"></div>
+        
+        <!-- Conteúdo do Modal -->
+        <div class="absolute bottom-0 md:top-0 md:right-0 md:bottom-0 md:left-auto w-full md:w-[450px] bg-white h-[85vh] md:h-full shadow-2xl rounded-t-3xl md:rounded-none flex flex-col transform transition-transform duration-300 translate-y-full md:translate-x-full" id="cart-panel">
+            
+            <!-- Header do Carrinho -->
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-3xl md:rounded-none">
+                <h2 class="text-xl font-bold text-gray-800">Seu Pedido</h2>
+                <button onclick="toggleCartModal()" class="text-gray-400 hover:text-red-500 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Lista de Itens (Scrollável) -->
+            <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4">
+                <!-- Itens serão injetados aqui via JS -->
+                <div class="text-center text-gray-500 mt-10">
+                    <i class="fas fa-shopping-basket text-4xl mb-3 text-gray-300"></i>
+                    <p>Seu carrinho está vazio.</p>
+                </div>
+            </div>
+
+            <!-- Footer do Carrinho (Totais e Botão) -->
+            <div class="p-6 bg-gray-50 border-t border-gray-100 overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-600">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-gray-900">R$ 0,00</span>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Observações:</label>
+                    <input type="text" id="observation-input" placeholder="Ex: Sem cebola, maionese à parte..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm">
+                </div>
+
+                <div class="mb-4">
+                     <label class="block text-sm font-medium text-gray-700 mb-1">Endereço de Entrega (Opcional):</label>
+                     <input type="text" id="address-input" placeholder="Rua, Número, Bairro..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Forma de Pagamento:</label>
+                    <select id="payment-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-sm bg-white">
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Dinheiro">Dinheiro (Trazer troco)</option>
+                    </select>
+                </div>
+
+                <button onclick="finalizeOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold shadow-lg shadow-green-200 transition flex items-center justify-center gap-2">
+                    <span>Finalizar no WhatsApp</span>
+                    <i class="fab fa-whatsapp text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÃO FLUTUANTE DE CARRINHO (MOBILE) -->
+    <button id="cart-float-btn" onclick="toggleCartModal()" class="fixed bottom-6 right-6 z-40 bg-orange-600 text-white p-4 rounded-full shadow-2xl hover:bg-orange-700 transition transform hover:scale-110 hidden flex items-center justify-center gap-2">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cart-count-float" class="bg-white text-orange-600 text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+        <span class="font-bold text-sm ml-1" id="cart-total-float">R$ 0,00</span>
+    </button>
+
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- JS Logic -->
+    <script>
+        // CONFIGURAÇÃO WHATSAPP
+        const whatsappNumber = "5511999999999"; 
+
+        // ESTADO GLOBAL
+        let menuData = [];
+        let cart = [];
+
+        // MEGA CARDÁPIO INTEGRADO (Não precisa carregar arquivo externo)
+        const fallbackMenu = [
+  {
+    "id": 1,
+    "nome": "Double Smash Cheddar",
+    "foto": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 28.90,
+    "ingredientes": "Pão brioche, dois smash burgers 80g, muito cheddar inglês, cebola caramelizada.",
+    "categoria": "burger"
+  },
+  {
+    "id": 2,
+    "nome": "Clássico Salad",
+    "foto": "https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 24.50,
+    "ingredientes": "Pão de gergelim, blend 160g, queijo prato, alface americana, tomate, picles artesanal.",
+    "categoria": "burger"
+  },
+  {
+    "id": 3,
+    "nome": "Bacon King Extreme",
+    "foto": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 32.90,
+    "ingredientes": "Pão australiano, blend 180g, bacon crocante, cheddar cremoso, onion rings e barbecue.",
+    "categoria": "burger"
+  },
+  {
+    "id": 4,
+    "nome": "Trufado Deluxe",
+    "foto": "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 36.00,
+    "ingredientes": "Pão brioche, blend 180g, maionese de trufas negras, queijo brie e rúcula.",
+    "categoria": "burger"
+  },
+  {
+    "id": 5,
+    "nome": "Chicken Crispy",
+    "foto": "https://images.unsplash.com/photo-1615551309522-28d31c192c7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 26.00,
+    "ingredientes": "Pão de batata, sobrecoxa de frango empanada, alface, maionese de limão e picles.",
+    "categoria": "burger"
+  },
+  {
+    "id": 6,
+    "nome": "Veggie Future",
+    "foto": "https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 29.90,
+    "ingredientes": "Pão integral, hambúrguer de grão de bico e cogumelos, alface, tomate e molho pesto.",
+    "categoria": "burger"
+  },
+  {
+    "id": 7,
+    "nome": "Monster Triple",
+    "foto": "https://images.unsplash.com/photo-1619250906680-a887b22d1316?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 42.90,
+    "ingredientes": "Para os fortes: 3 carnes de 120g, triplo queijo, bacon em cubos e ovo frito.",
+    "categoria": "burger"
+  },
+  {
+    "id": 8,
+    "nome": "Blue Cheese Burger",
+    "foto": "https://images.unsplash.com/photo-1513185158878-8d8c2a2a3da3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 34.50,
+    "ingredientes": "Pão brioche, blend 160g, creme de gorgonzola, cebola roxa grelhada e mel.",
+    "categoria": "burger"
+  },
+  {
+    "id": 9,
+    "nome": "Combo Individual",
+    "foto": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 38.90,
+    "ingredientes": "1 Clássico Salad + 1 Batata Frita Individual + 1 Refrigerante Lata.",
+    "categoria": "combo"
+  },
+  {
+    "id": 10,
+    "nome": "Combo Casal",
+    "foto": "https://images.unsplash.com/photo-1610614819513-58e34989848b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 69.90,
+    "ingredientes": "2 Double Smash + 2 Batatas Fritas + 2 Refrigerantes.",
+    "categoria": "combo"
+  },
+  {
+    "id": 11,
+    "nome": "Combo Família",
+    "foto": "https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 119.90,
+    "ingredientes": "4 Cheeseburgers, 4 Batatas fritas médias e 1 Refrigerante 2L.",
+    "categoria": "combo"
+  },
+  {
+    "id": 12,
+    "nome": "Combo Kids",
+    "foto": "https://images.unsplash.com/photo-1628191139360-4083564d03fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 29.90,
+    "ingredientes": "1 Burger Kids (Pão, carne e queijo), Batata Sorriso e Suco de Laranja.",
+    "categoria": "combo"
+  },
+  {
+    "id": 13,
+    "nome": "Batata Rústica",
+    "foto": "https://images.unsplash.com/photo-1573080496987-a199f8cd75c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 16.00,
+    "ingredientes": "Batatas cortadas à mão, alecrim, alho e maionese de ervas.",
+    "categoria": "acompanhamento"
+  },
+  {
+    "id": 14,
+    "nome": "Onion Rings",
+    "foto": "https://images.unsplash.com/photo-1639024471283-03518883512d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 18.00,
+    "ingredientes": "Anéis de cebola empanados e dourados. Acompanha molho barbecue.",
+    "categoria": "acompanhamento"
+  },
+  {
+    "id": 15,
+    "nome": "Nuggets Artesanais",
+    "foto": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 22.00,
+    "ingredientes": "Porção de 10 unidades de frango de verdade empanado. Acompanha mostarda e mel.",
+    "categoria": "acompanhamento"
+  },
+  {
+    "id": 16,
+    "nome": "Fritas Cheddar & Bacon",
+    "foto": "https://images.unsplash.com/photo-1585109649139-366815a0d713?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 24.00,
+    "ingredientes": "Porção generosa de batatas fritas cobertas com creme de cheddar e farofa de bacon.",
+    "categoria": "acompanhamento"
+  },
+  {
+    "id": 17,
+    "nome": "Coca-Cola Lata",
+    "foto": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 6.00,
+    "ingredientes": "Lata 350ml gelada.",
+    "categoria": "bebida"
+  },
+  {
+    "id": 18,
+    "nome": "Milkshake Morango",
+    "foto": "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 18.00,
+    "ingredientes": "Sorvete de creme batido com morangos frescos e chantilly.",
+    "categoria": "bebida"
+  },
+  {
+    "id": 19,
+    "nome": "Milkshake Chocolate",
+    "foto": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 18.00,
+    "ingredientes": "Feito com chocolate belga e calda de chocolate meio amargo.",
+    "categoria": "bebida"
+  },
+  {
+    "id": 20,
+    "nome": "Suco de Laranja",
+    "foto": "https://images.unsplash.com/photo-1613478223719-2ab802602423?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 12.00,
+    "ingredientes": "Suco natural da fruta, 500ml.",
+    "categoria": "bebida"
+  },
+  {
+    "id": 21,
+    "nome": "Cerveja IPA Artesanal",
+    "foto": "https://images.unsplash.com/photo-1608270586620-248524c67de9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 22.00,
+    "ingredientes": "Garrafa 500ml. Cerveja local com notas cítricas.",
+    "categoria": "bebida"
+  },
+  {
+    "id": 22,
+    "nome": "Água com Gás",
+    "foto": "https://images.unsplash.com/photo-1560697529-722f2000b71f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "preco": 5.00,
+    "ingredientes": "Garrafinha 500ml.",
+    "categoria": "bebida"
+  }
+];
+
+        // --- INICIALIZAÇÃO ---
+        async function initApp() {
+            // Usa diretamente a lista integrada, ignorando fetch externo
+            menuData = fallbackMenu;
+            renderItems(menuData);
+        }
+
+        // --- RENDERIZAÇÃO E FILTROS ---
+        function renderItems(items) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = ''; 
+
+            if(items.length === 0) {
+                container.innerHTML = '<div class="col-span-2 text-center py-10 text-gray-500">Nenhum item encontrado nesta categoria.</div>';
+                return;
+            }
+
+            items.forEach((item) => {
+                const card = document.createElement('article');
+                card.className = `bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row hover:shadow-xl transition-shadow duration-300 group reveal`;
+                
+                const precoFormatado = item.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                card.innerHTML = `
+                    <div class="h-48 md:h-auto md:w-2/5 relative overflow-hidden">
+                        <img src="${item.foto}" alt="${item.nome}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" onerror="this.src='https://placehold.co/600x400?text=Sem+Foto'">
+                    </div>
+                    <div class="p-5 flex flex-col justify-between flex-grow md:w-3/5">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-lg text-gray-900 leading-tight">${item.nome}</h3>
+                            </div>
+                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">${item.ingredientes}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-2 pt-4 border-t border-gray-50">
+                            <span class="text-xl font-bold text-orange-600">${precoFormatado}</span>
+                            <button onclick="addToCart(${item.id})" class="bg-gray-900 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg transform active:scale-95 transition flex items-center gap-2">
+                                <span>Adicionar</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterMenu(category) {
+            // Atualizar botões visuais
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(category === btn.getAttribute('data-category')) {
+                     btn.classList.add('bg-orange-600', 'text-white');
+                     btn.classList.remove('bg-white', 'text-gray-600');
+                } else {
+                     btn.classList.remove('bg-orange-600', 'text-white');
+                     btn.classList.add('bg-white', 'text-gray-600');
+                }
+            });
+            
+            // Atualizar cor do botão 'Todos' especificamente se a categoria for 'all'
+            if(category === 'all') {
+                const allBtn = document.querySelector('[data-category="all"]');
+                allBtn.classList.add('bg-orange-600', 'text-white');
+            }
+
+            // Filtrar dados
+            if (category === 'all') {
+                renderItems(menuData);
+            } else {
+                const filtered = menuData.filter(item => item.categoria === category);
+                renderItems(filtered);
+            }
+        }
+
+        // --- LÓGICA DO CARRINHO ---
+
+        function addToCart(id) {
+            const item = menuData.find(i => i.id === id);
+            if (!item) return;
+
+            const existingItem = cart.find(i => i.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+
+            updateCartUI();
+            
+            // Se o carrinho estiver aberto, renderiza novamente a lista
+            if(!document.getElementById('cart-modal').classList.contains('hidden')){
+                renderCartItems();
+            } else {
+                // Só mostra toast se for adição fora do modal
+                Toastify({
+                    text: `${item.nome} adicionado!`,
+                    duration: 3000,
+                    gravity: "top", 
+                    position: "right", 
+                    style: {
+                        background: "#ea580c",
+                        borderRadius: "10px",
+                        fontSize: "14px"
+                    },
+                }).showToast();
+            }
+        }
+
+        function removeFromCart(id) {
+            const index = cart.findIndex(i => i.id === id);
+            if (index > -1) {
+                if(cart[index].quantity > 1) {
+                    cart[index].quantity--;
+                } else {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartUI();
+            renderCartItems();
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
+            const totalFormatted = totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // Atualizar Badge Desktop
+            const desktopCount = document.getElementById('cart-count-desktop');
+            desktopCount.innerText = totalItems;
+            if (totalItems > 0) desktopCount.classList.remove('hidden');
+            else desktopCount.classList.add('hidden');
+
+            // Atualizar Botão Flutuante Mobile
+            const floatBtn = document.getElementById('cart-float-btn');
+            const floatCount = document.getElementById('cart-count-float');
+            const floatTotal = document.getElementById('cart-total-float');
+
+            floatCount.innerText = totalItems;
+            floatTotal.innerText = totalFormatted;
+
+            if (totalItems > 0) {
+                floatBtn.classList.remove('hidden');
+                floatBtn.classList.add('flex');
+            } else {
+                floatBtn.classList.add('hidden');
+                floatBtn.classList.remove('flex');
+            }
+
+            // Atualizar Total no Modal
+            document.getElementById('cart-total').innerText = totalFormatted;
+        }
+
+        // --- MODAL DO CARRINHO ---
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            const panel = document.getElementById('cart-panel');
+            
+            if (modal.classList.contains('hidden')) {
+                // Abrir
+                renderCartItems();
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    panel.classList.remove('translate-y-full', 'md:translate-x-full');
+                }, 10);
+            } else {
+                // Fechar
+                panel.classList.add('translate-y-full', 'md:translate-x-full');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 mt-10 flex flex-col items-center">
+                        <div class="bg-gray-100 p-6 rounded-full mb-4">
+                             <i class="fas fa-shopping-basket text-4xl text-gray-400"></i>
+                        </div>
+                        <p class="font-medium">Seu carrinho está vazio.</p>
+                        <p class="text-sm">Adicione itens deliciosos para começar!</p>
+                        <button onclick="toggleCartModal()" class="mt-4 text-orange-600 font-bold hover:underline">Ver Cardápio</button>
+                    </div>
+                `;
+                return;
+            }
+
+            cart.forEach(item => {
+                const totalItem = (item.preco * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                
+                const el = document.createElement('div');
+                el.className = "flex items-center gap-4 bg-gray-50 p-3 rounded-xl";
+                el.innerHTML = `
+                    <img src="${item.foto}" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://placehold.co/100?text=Foto'">
+                    <div class="flex-grow">
+                        <h4 class="font-bold text-sm text-gray-800">${item.nome}</h4>
+                        <div class="text-orange-600 font-bold text-sm">${totalItem}</div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-2 py-1">
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 px-1 font-bold">-</button>
+                        <span class="text-sm font-semibold w-4 text-center">${item.quantity}</span>
+                        <button onclick="addToCart(${item.id})" class="text-green-600 px-1 font-bold">+</button>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        // --- FINALIZAÇÃO ---
+
+        function finalizeOrder() {
+            if (cart.length === 0) {
+                Toastify({ text: "Seu carrinho está vazio!", style: { background: "#ef4444" } }).showToast();
+                return;
+            }
+
+            const address = document.getElementById('address-input').value;
+            const observation = document.getElementById('observation-input').value; // Observação
+            const paymentMethod = document.getElementById('payment-input').value; // Pagamento
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.preco * item.quantity), 0);
+            
+            // Formatando mensagem bonita para WhatsApp
+            let message = `*🍔 NOVO PEDIDO - BURGERAPP*\n----------------------------------\n`;
+            
+            cart.forEach(item => {
+                const itemTotal = (item.preco * item.quantity).toFixed(2).replace('.', ',');
+                message += `${item.quantity}x *${item.nome}* ... R$ ${itemTotal}\n`;
+            });
+
+            const totalFormatted = totalPrice.toFixed(2).replace('.', ',');
+
+            message += `----------------------------------\n*💰 Total: R$ ${totalFormatted}*\n----------------------------------`;
+            
+            if (observation) {
+                message += `\n\n📝 *Observações:*\n${observation}`;
+            }
+
+            if (paymentMethod) {
+                 message += `\n\n💳 *Forma de Pagamento:*\n${paymentMethod}`;
+            } else {
+                 message += `\n\n💳 *Forma de Pagamento:*\nA combinar`;
+            }
+
+            if (address) {
+                message += `\n\n📍 *Endereço de entrega:*\n${address}`;
+            } else {
+                message += `\n\n📍 *Retirada no balcão*`;
+            }
+
+            message += `\n\n✅ *Aguardando confirmação...*`;
+
+            const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-md', 'py-0');
+            } else {
+                nav.classList.remove('shadow-md', 'py-0');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
